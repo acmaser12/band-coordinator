@@ -1,3 +1,11 @@
+/**
+ * Adam Maser
+ * CSC 450
+ * Assignment 2
+ *
+ * 1.26.2020
+ */
+
 import java.util.ArrayList;
 
 public class Coordinator {
