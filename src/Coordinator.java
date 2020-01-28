@@ -28,7 +28,7 @@ import java.util.Scanner;
 public class Coordinator {
 
     public static void main(String[] args) {
-        ArrayList<Band> bands;
+        Band[] bands = new Band[0];
         try {
             bands = getBands(new File("bands.txt"));
         } catch (FileNotFoundException ex) {
@@ -36,22 +36,11 @@ public class Coordinator {
             System.exit(2);
         }
 
-
+        Band[] bandsByName = sortByName(bands);
+        Band[] bandsBySetTime = sortBySetTime(bands);
     }
 
-    public static boolean searchBands(ArrayList<Band> sortedBands, String query) {
-        if (sortedBands.size() == 0) {
-            return false;
-        }
-        if (sortedBands.get(sortedBands.size() / 2).getBandName().equals(query)) {
-            return true;
-        } else {
-            // searchBands()
-        }
-        return true;
-    }
-
-    private static ArrayList<Band> getBands(File bandFile) throws FileNotFoundException {
+    private static Band[] getBands(File bandFile) throws FileNotFoundException {
         // init band ArrayList
         ArrayList<Band> bands = new ArrayList<>();
 
@@ -66,7 +55,60 @@ public class Coordinator {
             bands.add(new Band(bandInfo[0], Float.parseFloat(bandInfo[1])));
         }
 
+        Band[] bandsArray = new Band[bands.size()];
+
+        for (int i = 0; i < bands.size(); i++) {
+            bandsArray[i] = bands.get(i);
+        }
+        return bandsArray;
+    }
+
+    private static Band[] sortByName(Band[] bands) {
+        int count = bands.length;
+        Band temp;
+        // loop through each band in list
+        // basically, push lesser (alphabetically) names to the end of the line
+        // loop through each element and eventually it will be sorted
+        // complexity: O(n^2)
+        for (int i = 0; i < count; i++) {
+            for (int j = i + 1; j < count; j++) {
+                if (bands[i].getBandName().compareTo(bands[j].getBandName()) > 0) {
+                    temp = bands[i];
+                    bands[i] = bands[j];
+                    bands[j] = temp;
+                }
+            }
+        }
         return bands;
+    }
+
+    private static Band[] sortBySetTime(Band[] bands) {
+        int count = bands.length;
+        Band temp;
+        // same concept as sorting by band name
+        for (int i = 0; i < count; i++) {
+            for (int j = i + 1; j < count; j++) {
+                if (bands[i].getSetTime() > bands[j].getSetTime()) {
+                    temp = bands[i];
+                    bands[i] = bands[j];
+                    bands[j] = temp;
+                }
+            }
+        }
+
+        return bands;
+    }
+
+    private static boolean searchBands(ArrayList<Band> sortedBands, String query) {
+        if (sortedBands.size() == 0) {
+            return false;
+        }
+        if (sortedBands.get(sortedBands.size() / 2).getBandName().equals(query)) {
+            return true;
+        } else {
+            // searchBands()
+        }
+        return true;
     }
 }
 
