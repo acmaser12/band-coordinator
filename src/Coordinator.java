@@ -1,9 +1,11 @@
 /*
-  Adam Maser
-  CSC 450
-  Assignment 2
+    Adam Maser
+    CSC 420
+    Assignment 2
+    1.27.2020
 
-  1.26.2020
+    "Band Coordinator"
+    desc: Create various algorithms to sort and search data from a file.
  */
 
 import java.io.File;
@@ -15,7 +17,6 @@ import java.util.Scanner;
 public class Coordinator {
 
     public static void main(String[] args) {
-
         // read bands from file and store into Band array
         Band[] bands = new Band[0];
         try {
@@ -55,7 +56,8 @@ public class Coordinator {
                     searchBySetTime(bandsBySetTime, setQuery);
                     break;
                 case 99:
-                    System.out.println("-------------\nExiting program...");
+                    // exit program
+                    System.out.println("------------------\nExiting program...\n------------------");
                     System.exit(1);
             }
         }
@@ -77,20 +79,23 @@ public class Coordinator {
         }
 
         Band[] bandsArray = new Band[bands.size()];
-
         for (int i = 0; i < bands.size(); i++) {
             bandsArray[i] = bands.get(i);
         }
         return bandsArray;
     }
 
+    /**
+     * @param bands : array of Band objects (unsorted)
+     * @return : descending order of Band objects by Band Name
+     *
+     * Loops through each band in array, pushes lesser alphabetical names to end of array
+     * Complexity: O(n^2)
+     */
     private static Band[] sortByName(Band[] bands) {
         int count = bands.length;
         Band temp;
-        // loop through each band in list
-        // basically, push lesser (alphabetically) names to the end of the line
-        // loop through each element and eventually it will be sorted
-        // complexity: O(n^2) -- (kinda slow)
+
         for (int i = 0; i < count; i++) {
             for (int j = i + 1; j < count; j++) {
                 if (bands[i].getBandName().compareTo(bands[j].getBandName()) > 0) {
@@ -103,6 +108,13 @@ public class Coordinator {
         return bands;
     }
 
+    /**
+     * @param bands : array of Band objects (unsorted)
+     * @return : descending order of Band objects by Set Time
+     *
+     * Loops through each band in array, pushes longer set times to end of array
+     * Complexity: O(n^2)
+     */
     private static Band[] sortBySetTime(Band[] bands) {
         int count = bands.length;
         Band temp;
@@ -119,6 +131,13 @@ public class Coordinator {
         return bands;
     }
 
+    /**
+     * @param sortedBands : array of Band objects sorted in desc order by Band Name
+     * @param query : String Band Name search
+     *
+     * Uses recursive binary search algorithm to decrease array by half in each recursion cycle
+     * Complexity: O(log n)
+     */
     private static void searchByBandName(Band[] sortedBands, String query) {
         if (sortedBands.length > 1) {
             // get middle index
@@ -149,6 +168,14 @@ public class Coordinator {
         }
     }
 
+    /**
+     * @param sortedBands : array of Band objects sorted in desc order by Band Name
+     * @param query : float Set Time search
+     *
+     * Uses linear search to find where it fits in sequence, then tests gap to see if it closer
+     *              to current set time or previous set time
+     * Complexity: O(n)
+     */
     private static void searchBySetTime(Band[] sortedBands, float query) {
         for (int i = 1; i <= sortedBands.length; i++) {
             // iterate through bands until query is less than current band
