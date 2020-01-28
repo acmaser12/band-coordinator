@@ -6,20 +6,6 @@
   1.26.2020
  */
 
-/*
- -------
-  Program Outline
- -------
-  1) Load data from file
-       a) store each band into Band object
-  2) Sort Bands by name and set time (2 ArrayLists?)
-       a) Tower of Hanoi algorithm?
-  3) Method for binary Band Name search (searchBands())
-       a) recursively search
-  4) Method for linear Set Time search (searchSetTime())
-
- */
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -51,7 +37,7 @@ public class Coordinator {
 
             switch (choice) {
                 case 1:
-                    // sort names from file
+                    // sort bands from file by band name
                     Band[] bandsByName = sortByName(bands);
                     // prompt user and gather input
                     System.out.println("Enter Band Name you are looking for:");
@@ -60,7 +46,13 @@ public class Coordinator {
                     searchByBandName(bandsByName, query);
                     break;
                 case 2:
+                    // sort bands from file by set time
                     Band[] bandsBySetTime = sortBySetTime(bands);
+                    // prompt user and gather input
+                    System.out.println("Enter the Set time you are looking for:");
+                    float setQuery = Float.parseFloat(stdin.nextLine());
+                    // call search method
+                    searchBySetTime(bandsBySetTime, setQuery);
                     break;
                 case 99:
                     System.out.println("-------------\nExiting program...");
@@ -128,7 +120,7 @@ public class Coordinator {
     }
 
     private static void searchByBandName(Band[] sortedBands, String query) {
-        if (sortedBands.length != 0) {
+        if (sortedBands.length > 1) {
             // get middle index
             int mid = sortedBands.length / 2;
 
@@ -152,7 +144,27 @@ public class Coordinator {
             }
         } else {
             // if no match, output to user
-            System.out.print("Band [" + query + "] was not found");
+            System.out.println("Bandname is: " + query);
+            System.out.println("Band [" + query + "] was not found");
+        }
+    }
+
+    private static void searchBySetTime(Band[] sortedBands, float query) {
+        for (int i = 1; i <= sortedBands.length; i++) {
+            // iterate through bands until query is less than current band
+            // then, test if it is closer to element behind or current
+            if (query < sortedBands[i].getSetTime()) {
+                float lastDiff = query - sortedBands[i-1].getSetTime();
+                float nextDiff = sortedBands[i].getSetTime() - query;
+                if (lastDiff < nextDiff) {
+                    System.out.println("Band with the closest time is: " + sortedBands[i-1].getBandName() +
+                            " has a set time of " + sortedBands[i-1].getSetTime() + " minutes");
+                } else {
+                    System.out.println("Band with the closest time is: " + sortedBands[i].getBandName() +
+                            " has a set time of " + sortedBands[i].getSetTime() + " minutes");
+                }
+                break;
+            }
         }
     }
 }
@@ -161,24 +173,16 @@ class Band {
     private String bandName;
     private float setTime;
 
-    public Band(String bandName, float setTime) {
+    Band(String bandName, float setTime) {
         this.bandName = bandName;
         this.setTime = setTime;
     }
 
-    public String getBandName() {
+    String getBandName() {
         return bandName;
     }
 
-    public void setBandName(String bandName) {
-        this.bandName = bandName;
-    }
-
-    public float getSetTime() {
+    float getSetTime() {
         return setTime;
-    }
-
-    public void setSetTime(float setTime) {
-        this.setTime = setTime;
     }
 }
