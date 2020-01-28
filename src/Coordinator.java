@@ -20,9 +20,24 @@
 
  */
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Coordinator {
+
+    public static void main(String[] args) {
+        ArrayList<Band> bands;
+        try {
+            bands = getBands(new File("bands.txt"));
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found, exiting program...");
+            System.exit(2);
+        }
+
+
+    }
 
     public static boolean searchBands(ArrayList<Band> sortedBands, String query) {
         if (sortedBands.size() == 0) {
@@ -34,6 +49,24 @@ public class Coordinator {
             // searchBands()
         }
         return true;
+    }
+
+    private static ArrayList<Band> getBands(File bandFile) throws FileNotFoundException {
+        // init band ArrayList
+        ArrayList<Band> bands = new ArrayList<>();
+
+        // get Scanner
+        Scanner readFile = new Scanner(bandFile);
+
+        // loop through file and add to ArrayList
+        while (readFile.hasNextLine()) {
+            // split string into name and set time
+            String[] bandInfo = readFile.nextLine().split("\\|");
+            // create Band object and store in ArrayList
+            bands.add(new Band(bandInfo[0], Float.parseFloat(bandInfo[1])));
+        }
+
+        return bands;
     }
 }
 
