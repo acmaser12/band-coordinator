@@ -29,6 +29,8 @@ import java.util.Scanner;
 public class Coordinator {
 
     public static void main(String[] args) {
+
+        // read bands from file and store into Band array
         Band[] bands = new Band[0];
         try {
             bands = getBands(new File("bands.txt"));
@@ -37,10 +39,9 @@ public class Coordinator {
             System.exit(2);
         }
 
-        // because the band list is static, I sort these right away
-        // if they weren't, you could dynamically do so
-        // by passing the sort methods as arguments to search methods.
-
+        // output program info
+        System.out.println("Submitted by: Adam Maser - masera1@csp.edu");
+        System.out.println("I certify that this is my own work");
 
         // program control
         Scanner stdin = new Scanner(System.in);
@@ -50,12 +51,12 @@ public class Coordinator {
 
             switch (choice) {
                 case 1:
+                    // sort names from file
                     Band[] bandsByName = sortByName(bands);
-                    for (int i = 0; i < bandsByName.length; i++) {
-                        System.out.println(bandsByName[i].getBandName());
-                    }
+                    // prompt user and gather input
                     System.out.println("Enter Band Name you are looking for:");
                     String query = stdin.nextLine();
+                    // call search method
                     searchByBandName(bandsByName, query);
                     break;
                 case 2:
@@ -123,7 +124,6 @@ public class Coordinator {
                 }
             }
         }
-
         return bands;
     }
 
