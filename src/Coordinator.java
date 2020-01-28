@@ -149,11 +149,10 @@ public class Coordinator {
             // if equal, return index of match
             if (comparison == 0) {
                 // store result
-                Band result = sortedBands[mid];
+                Band foundBand = sortedBands[mid];
                 //output to user
-                System.out.println("Bandname is: " + result.getBandName().toLowerCase());
-                System.out.println("Band found is: " + result.getBandName() + " has a set time of " +
-                        result.getSetTime() + " minutes");
+                System.out.println("Bandname is: " + query);
+                System.out.println("Band found is: " + foundBand.toString());
             } else if (comparison > 0) {
                 // if greater than 0, recursively call method with larger half of array
                 searchByBandName(Arrays.copyOfRange(sortedBands, mid, sortedBands.length), query);
@@ -183,13 +182,13 @@ public class Coordinator {
             if (query < sortedBands[i].getSetTime()) {
                 float lastDiff = query - sortedBands[i-1].getSetTime();
                 float nextDiff = sortedBands[i].getSetTime() - query;
+                Band foundBand;
                 if (lastDiff < nextDiff) {
-                    System.out.println("Band with the closest time is: " + sortedBands[i-1].getBandName() +
-                            " has a set time of " + sortedBands[i-1].getSetTime() + " minutes");
+                    foundBand = sortedBands[i-1];
                 } else {
-                    System.out.println("Band with the closest time is: " + sortedBands[i].getBandName() +
-                            " has a set time of " + sortedBands[i].getSetTime() + " minutes");
+                    foundBand = sortedBands[i];
                 }
+                System.out.println("Band with closest set time is: " + foundBand.toString());
                 break;
             }
         }
@@ -203,6 +202,11 @@ class Band {
     Band(String bandName, float setTime) {
         this.bandName = bandName;
         this.setTime = setTime;
+    }
+
+    @Override
+    public String toString() {
+        return this.getBandName() + " has a set time of " + this.setTime + " minutes";
     }
 
     String getBandName() {
