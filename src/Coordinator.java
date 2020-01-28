@@ -36,8 +36,29 @@ public class Coordinator {
             System.exit(2);
         }
 
-        Band[] bandsByName = sortByName(bands);
-        Band[] bandsBySetTime = sortBySetTime(bands);
+        // because the band list is static, I sort these right away
+        // if they weren't, you could dynamically do so
+        // by passing the sort methods as arguments to search methods.
+
+
+        // program control
+        Scanner stdin = new Scanner(System.in);
+        while (true) {
+            System.out.println("Search by Band Name (1) or Set List (2):");
+            int choice = stdin.nextInt();
+
+            switch (choice) {
+                case 1:
+                    Band[] bandsByName = sortByName(bands);
+                    break;
+                case 2:
+                    Band[] bandsBySetTime = sortBySetTime(bands);
+                    break;
+                case 99:
+                    System.out.println("-------------\nExiting program...");
+                    System.exit(1);
+            }
+        }
     }
 
     private static Band[] getBands(File bandFile) throws FileNotFoundException {
