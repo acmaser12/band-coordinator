@@ -23,6 +23,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Coordinator {
@@ -44,12 +45,18 @@ public class Coordinator {
         // program control
         Scanner stdin = new Scanner(System.in);
         while (true) {
-            System.out.println("Search by Band Name (1) or Set List (2):");
-            int choice = stdin.nextInt();
+            System.out.println("\nSearch by Band Name (1) or Set List (2):");
+            int choice = Integer.parseInt(stdin.nextLine());
 
             switch (choice) {
                 case 1:
                     Band[] bandsByName = sortByName(bands);
+                    for (int i = 0; i < bandsByName.length; i++) {
+                        System.out.println(bandsByName[i].getBandName());
+                    }
+                    System.out.println("Enter Band Name you are looking for:");
+                    String query = stdin.nextLine();
+                    searchByBandName(bandsByName, query);
                     break;
                 case 2:
                     Band[] bandsBySetTime = sortBySetTime(bands);
@@ -90,7 +97,7 @@ public class Coordinator {
         // loop through each band in list
         // basically, push lesser (alphabetically) names to the end of the line
         // loop through each element and eventually it will be sorted
-        // complexity: O(n^2)
+        // complexity: O(n^2) -- (kinda slow)
         for (int i = 0; i < count; i++) {
             for (int j = i + 1; j < count; j++) {
                 if (bands[i].getBandName().compareTo(bands[j].getBandName()) > 0) {
@@ -120,16 +127,33 @@ public class Coordinator {
         return bands;
     }
 
-    private static boolean searchBands(ArrayList<Band> sortedBands, String query) {
-        if (sortedBands.size() == 0) {
-            return false;
-        }
-        if (sortedBands.get(sortedBands.size() / 2).getBandName().equals(query)) {
-            return true;
+    private static void searchByBandName(Band[] sortedBands, String query) {
+        if (sortedBands.length != 0) {
+            // get middle index
+            int mid = sortedBands.length / 2;
+
+            // string to string comparison and store result
+            int comparison = query.compareToIgnoreCase(sortedBands[mid].getBandName());
+
+            // if equal, return index of match
+            if (comparison == 0) {
+                // store result
+                Band result = sortedBands[mid];
+                //output to user
+                System.out.println("Bandname is: " + result.getBandName().toLowerCase());
+                System.out.println("Band found is: " + result.getBandName() + " has a set time of " +
+                        result.getSetTime() + " minutes");
+            } else if (comparison > 0) {
+                // if greater than 0, recursively call method with larger half of array
+                searchByBandName(Arrays.copyOfRange(sortedBands, mid, sortedBands.length), query);
+            } else {
+                // else, recursively call method with smaller half of array
+                searchByBandName(Arrays.copyOfRange(sortedBands, 0, mid), query);
+            }
         } else {
-            // searchBands()
+            // if no match, output to user
+            System.out.print("Band [" + query + "] was not found");
         }
-        return true;
     }
 }
 
